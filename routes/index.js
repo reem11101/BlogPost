@@ -7,4 +7,5 @@ router.get('/', function(req, res, next) {
   res.render('index', );
 });
 
+//mongo password amb75nd62rkAXoYF
 module.exports = router;

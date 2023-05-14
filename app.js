@@ -2,8 +2,17 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const dotenv = require("dotenv");
+var mongoose = require('mongoose');
 var logger = require('morgan');
 
+
+const uri = 'mongodb+srv://mongo:mongo@cluster0.zcdoti8.mongodb.net/?retryWrites=true&w=majority';
+//mongoose.connect('mongodb://localhost/blog', {useNewUrlParser: true});
+mongoose
+  .connect(uri, {useNewUrlParser: true,})
+  .then(console.log("Connected to MongoDB"))
+  .catch((err) => console.log(err));
 
 var indexRouter = require('./routes/index');    
 var usersRouter = require('./routes/users');
