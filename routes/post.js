@@ -28,6 +28,23 @@ router.get('/', async function (req, res, next) {
   res.render('post', { post: posts });
 });
 
+// Search posts
+router.get('/search', async function (req, res, next) {
+  let query = new RegExp(req.query.title, 'i'); // 'i' makes it case insensitive
+  const posts = await Post.find({ title: query }).sort({createdAt: 'desc'});
+
+  if (!posts.length) {
+    return res.render('post', { message: "No posts found with the given title.", post: [] });
+  }
+  
+  // if (!posts.length) {
+  //   return res.status(404).send({ error: "No posts found with the given title." });
+  // }
+  
+  res.render('post', { post: posts });
+});
+
+
 
 // NEW ARTICLE ROUTES 
 router.post('/create', async (req, res) => {
@@ -62,10 +79,11 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
-  await Post.findByIdAndDelete(req.params.id)
-  res.redirect('/')
-})
+
+// router.delete('/:id', async (req, res) => {
+//   await Post.findByIdAndDelete(req.params.id)
+//   res.redirect('/')
+// })
 
 
 

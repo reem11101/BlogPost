@@ -31,6 +31,42 @@
 
 
     </div>
+    {{!-- SEARCH SECTION --}}
+    <div class="container">
+        <!-- SEARCH FORM -->
+        <h1 class="mb-4">Search Posts</h1>
+        <form action="/post/search" method="GET">
+            <div class="form-group">
+                <label for="title mb-2">Search by title</label>
+                <input required type="text" name="title" class="form-control"
+                    value="{{#if post}}{{ post.title }}{{/if}}">
+
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Search</button>
+        </form>
+        {{#if message}}
+        <div class="alert alert-danger mt-4">{{message}}</div>
+        {{/if}}
+    </div>
+
+
+    {{!-- SEARCH RESULTS --}}
+    <div class="container">
+        <h1 class="mb-4">Search Results</h1>
+        {{#each post}}
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4 class="card-title">{{ this.title }}</h4>
+                <div class="card-subtitle text-muted mb-2">{{this.createdAt}}</div>
+                <div class="card-text mb-2">{{ this.description }}</div>
+                <a href="/post/{{this.id}}" class="btn btn-primary">Read More</a>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+
+
     <div class="container">
         {{! TITLE FOR PAGE }}
         <h1 class="mb-4"> Blog Posts</h1>
