@@ -60,10 +60,37 @@ router.post('/create', async (req, res) => {
   }
 })
 
+// Edit post route
 router.get('/edit/:id', async (req, res) => {
-  const post = await Post.findById(req.params.id)
-  res.render('post', { post: new Post })
-})
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      console.log("Post not found");
+      return res.redirect('/post');
+    }
+    res.render('edit', { post });
+  } catch (e) {
+    console.log("An error occurred");
+    console.error(e);
+    return res.redirect('/post');
+  }
+});
+
+// Update post route
+router.post('/:id', async (req, res) => {
+  try {
+    const post = await Post.findByIdAndUpdate(req.params.id, req.body);
+    if (!post) {
+      console.log("Post not found");
+      return res.redirect('/post');
+    }
+    res.redirect(`/post/${post.id}`);
+  } catch (e) {
+    console.log("An error occurred");
+    console.error(e);
+    return res.redirect('/post');
+  }
+});
 
 
 // ID WILDCARD ROUTES
