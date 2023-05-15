@@ -22,7 +22,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
-var newPostRouter = require('./routes/newPost');
+// var newPostRouter = require('./routes/newPost');
 
 
 var app = express();
@@ -44,7 +44,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/post', postRouter);
-app.use('/newPost', newPostRouter)
+// app.use('/newPost', newPostRouter)
 
 
 
