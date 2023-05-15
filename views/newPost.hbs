@@ -11,13 +11,32 @@
 </head>
 
 <body>
-
     <div class="container">
         <h1 class="mb-4">New Post</h1>
-        <form action="/post" method="POST">
-          {{> form_fields }}
+        {{!-- <form action="/newPost" method="POST">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input required type="text" name="title" class="form-control" value= {{post.title}} >
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" class="form-control"> {{post.description}}</textarea>
+            </div>
+        </form> --}}
+        <form action="/newPost" method="POST">
+    <div class="form-group">
+        <label for="title">Title</label>
+        <input required type="text" name="title" class="form-control" value="{{ post.title }}" >
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea name="description" id="description" class="form-control">{{ post.description }}</textarea>
+    </div>
+    <a href="/post" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
 
-        </form>
+
     </div>
 </body>
 

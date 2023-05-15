@@ -10,9 +10,13 @@ var logger = require('morgan');
 const uri = 'mongodb+srv://mongo:mongo@cluster0.zcdoti8.mongodb.net/?retryWrites=true&w=majority';
 //mongoose.connect('mongodb://localhost/blog', {useNewUrlParser: true});
 mongoose
-  .connect(uri, {useNewUrlParser: true,})
-  .then(console.log("Connected to MongoDB"))
+  .connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+  .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
+// mongoose
+//   .connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+//   .then(console.log("Connected to MongoDB"))
+//   .catch((err) => console.log(err));
 
 var indexRouter = require('./routes/index');    
 var usersRouter = require('./routes/users');
@@ -26,6 +30,8 @@ var app = express();
 // view engine setup for handlebars
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+app.use(express.urlencoded({extended: false}))
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -57,5 +63,7 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 module.exports = app;

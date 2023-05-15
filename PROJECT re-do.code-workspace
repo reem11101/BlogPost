@@ -5,6 +5,8 @@
 		}
 	],
 	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "PROJECT re-do"
+		"liveServer.settings.multiRootWorkspaceName": "PROJECT re-do",
+		"workbench.preferredDarkColorTheme": "Visual Studio Dark",
+		"liveServer.settings.port": 5501
 	}
 }
