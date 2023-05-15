@@ -10,6 +10,7 @@ const methodOverride = require('method-override')
 
 
 
+
 const uri = 'mongodb+srv://mongo:mongo@cluster0.zcdoti8.mongodb.net/?retryWrites=true&w=majority';
 //mongoose.connect('mongodb://localhost/blog', {useNewUrlParser: true});
 mongoose
@@ -41,6 +42,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(express.urlencoded({extended: false}))
+app.use(methodOverride('_method'))
 
 app.use(logger('dev'));
 app.use(express.json());

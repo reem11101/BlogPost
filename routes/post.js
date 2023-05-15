@@ -21,29 +21,26 @@ async function getAllPosts() {
   });
   return posts;
 }
-//get request function for the getAllPosts function
+
+///Get request function for the getAllPosts function
 router.get('/', async function (req, res, next) {
   const posts = await getAllPosts();
-
   res.render('post', { post: posts });
 });
 
 // Search posts
 router.get('/search', async function (req, res, next) {
-  let query = new RegExp(req.query.title, 'i'); // 'i' makes it case insensitive
-  const posts = await Post.find({ title: query }).sort({createdAt: 'desc'});
+  let query = new RegExp(req.query.title, 'i'); // case insensitive
+  const posts = await Post.find({ title: query }).sort({ createdAt: 'desc' });
 
   if (!posts.length) {
     return res.render('post', { message: "No posts found with the given title.", post: [] });
   }
-  
-  // if (!posts.length) {
-  //   return res.status(404).send({ error: "No posts found with the given title." });
-  // }
-  
+
+
+
   res.render('post', { post: posts });
 });
-
 
 
 // NEW ARTICLE ROUTES 
@@ -63,6 +60,12 @@ router.post('/create', async (req, res) => {
   }
 })
 
+router.get('/edit/:id', async (req, res) => {
+  const post = await Post.findById(req.params.id)
+  res.render('post', { post: new Post })
+})
+
+
 // ID WILDCARD ROUTES
 router.get('/:id', async (req, res) => {
   try {
@@ -79,13 +82,34 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+//Delete route
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+    if (!post) {
+      console.log("Post not found");
+      return res.redirect('/post');
+    }
+    res.redirect('/post');
+  } catch (e) {
+    console.log("An error occurred");
+    console.error(e);
+    return res.redirect('/post');
+  }
+});
 
 // router.delete('/:id', async (req, res) => {
-//   await Post.findByIdAndDelete(req.params.id)
-//   res.redirect('/')
-// })
-
-
+//   try {
+//     await Post.findById(req.params.id);
+//     await this.post.delete();
+//     res.redirect('post');
+//   } catch (e) {
+//     console.log("An error occurred");
+//     console.error(e);
+//     return res.redirect('post');
+//   }
+// });
 
 
 //export Router

@@ -12,8 +12,10 @@
 
 <body>
 
+{{!-- ---------------------------------------------------- --}}
+
+    {{!  NEW POST }}
     <div class="container">
-        {{! TITLE FOR NEW POST }}
         <h1 class="mb-4">New Post</h1>
         <form action="/post/create" method="POST">
             <div class="form-group">
@@ -31,7 +33,12 @@
 
 
     </div>
-    {{!-- SEARCH SECTION --}}
+
+
+{{!-- ---------------------------------------------------- --}}
+
+
+    {{!-- SEARCH BAR --}}
     <div class="container">
         <!-- SEARCH FORM -->
         <h1 class="mb-4">Search Posts</h1>
@@ -43,6 +50,7 @@
 
             </div>
             <button type="submit" class="btn btn-primary mb-2">Search</button>
+            <a href="/post" class="btn btn-secondary mb-2">Clear</a>
         </form>
         {{#if message}}
         <div class="alert alert-danger mt-4">{{message}}</div>
@@ -50,10 +58,14 @@
     </div>
 
 
+{{!-- ---------------------------------------------------- --}}
+
     {{!-- SEARCH RESULTS --}}
+    <div>
+     {{#if posts}}
     <div class="container">
         <h1 class="mb-4">Search Results</h1>
-        {{#each post}}
+        {{#each posts}}
         <div class="card mt-4">
             <div class="card-body">
                 <h4 class="card-title">{{ this.title }}</h4>
@@ -64,15 +76,15 @@
         </div>
         {{/each}}
     </div>
-
-
+    {{/if}}
+</div>
+{{!-- ---------------------------------------------------- --}}
 
     <div class="container">
         {{! TITLE FOR PAGE }}
         <h1 class="mb-4"> Blog Posts</h1>
 
         {{! This is a for each loop of the posts for the blog }}
-
         {{#each post}}
         <div class="card mt-4">
             <div class="card-body">
@@ -80,9 +92,9 @@
                 <div class="card-subtitle text-muted mb-2"> {{this.createdAt}}</div>
                 <div class="card-text mb-2"> {{ this.description }}</div>
                 <a href="/post/{{this.id}}" class="btn btn-primary">Read More</a>
-                {{!-- <form action="/post/{{this.id}}?_method=DELETE" method="POST">
+                <form action="/post/{{this.id}}?_method=DELETE" method="POST" class="d-inline">
                     <button type="submit" class="btn btn-danger">Delete</button>
-                </form> --}}
+                </form>
             </div>
         </div>
 
