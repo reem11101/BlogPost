@@ -12,11 +12,16 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "~4.18.2",
+    "handlebars": "^4.7.7",
     "hbs": "~4.2.0",
     "http-errors": "~1.6.3",
+    "marked": "^5.0.2",
+    "method-override": "^3.0.0",
+    "moment": "^2.29.4",
     "mongodb": "^5.5.0",
     "mongoose": "^7.1.1",
     "morgan": "~1.9.1",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "slugify": "^1.6.6"
   }
 }

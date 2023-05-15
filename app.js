@@ -2,9 +2,12 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
-const dotenv = require("dotenv");
 var mongoose = require('mongoose');
 var logger = require('morgan');
+const Handlebars = require('handlebars');
+const moment = require('moment');
+const methodOverride = require('method-override')
+
 
 
 const uri = 'mongodb+srv://mongo:mongo@cluster0.zcdoti8.mongodb.net/?retryWrites=true&w=majority';
@@ -23,6 +26,12 @@ var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
 // var newPostRouter = require('./routes/newPost');
+
+// Register the formatDate helper
+Handlebars.registerHelper('formatDate', function(date) {
+  return moment(date).format('MMMM Do, YYYY');
+});
+
 
 
 var app = express();

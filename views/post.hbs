@@ -13,20 +13,21 @@
 <body>
 
     <div class="container">
-             {{! TITLE FOR PAGE }}
+        {{! TITLE FOR NEW POST }}
         <h1 class="mb-4">New Post</h1>
-        <form action="/cr" method="POST">
-    <div class="form-group">
-        <label for="title">Title</label>
-        <input required type="text" name="title" class="form-control" value="{{ post.title }}" >
-    </div>
-    <div class="form-group">
-        <label for="description">Description</label>
-        <textarea name="description" id="description" class="form-control">{{ post.description }}</textarea>
-    </div>
-    <a href="/post" class="btn btn-secondary">Cancel</a>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+        <form action="/post/create" method="POST">
+            <div class="form-group">
+                <label for="title mb-2">Title</label>
+                <input required type="text" name="title" class="form-control" value="{{ post.title }}">
+            </div>
+            <div class="form-group">
+                <label for="description mb-2">Description</label>
+                <textarea name="description" id="description"
+                    class="form-control mb-2">{{ post.description }}</textarea>
+            </div>
+            <a href="/post" class="btn btn-secondary mb-2">Cancel</a>
+            <button type="submit" class="btn btn-success mb-2">New Article</button>
+        </form>
 
 
     </div>
@@ -34,19 +35,18 @@
         {{! TITLE FOR PAGE }}
         <h1 class="mb-4"> Blog Posts</h1>
 
-        {{! Button for Creating New Post}}
-        {{!-- <a href="/newPost" class="btn btn-success"> New Post </a> --}}
-
         {{! This is a for each loop of the posts for the blog }}
 
         {{#each post}}
         <div class="card mt-4">
             <div class="card-body">
-                <h4 class="card title"> {{this.title}}</h4>
-                <div class="card-subtitle text-muted mb-2">
-                    {{this.createdAt}}
-                    <div class="card-tect mb-2"> {{ this.description }}</div>
-              </div>
+                <h4 class="card-title"> {{ this.title }}</h4>
+                <div class="card-subtitle text-muted mb-2"> {{this.createdAt}}</div>
+                <div class="card-text mb-2"> {{ this.description }}</div>
+                <a href="/post/{{this.id}}" class="btn btn-primary">Read More</a>
+                {{!-- <form action="/post/{{this.id}}?_method=DELETE" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form> --}}
             </div>
         </div>
 
