@@ -69,21 +69,17 @@ router.get('/register', function (req, res, next) {
 });
 
 // Handle login request
-router.post('/login', async (req, res) => {
+router.post('/', async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(400).send('Invalid email or password');
-  }
-
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) {
+  if (!user || user.password !== password) {
     return res.status(400).send('Invalid email or password');
   }
 
   res.send('Logged in');
 });
+
 
 // Handle register request
 router.post('/register', async (req, res) => {
