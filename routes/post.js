@@ -8,45 +8,18 @@ const methodOverride = require('method-override')
 const session = require('express-session');
 
 
-
-
 var app = express();
 app.use(methodOverride('_method'))
 
 //functions for all posts
-        function checkAuth(req, res, next) {
-          if (!req.session.userEmail) {
-            return res.status(401).send('Not authenticated');
-          }
-
-          next();
-        }
-        // fetch all posts
-        async function getAllPosts() {
-          const posts = await Post.find().sort({
-            createdAt: 'desc'//sorts the posts in decending order 
-          });
-          return posts;
-        }
-        
-///Get request function for the getAllPosts function
-router.get('/', async function (req, res, next) {
-  const posts = await getAllPosts();
-  res.render('index', { post: posts });
-});
-
-
-
-router.get('/', checkAuth, async (req, res) => {
-  try {
-    const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
-    console.log(posts);
-    res.render('post', { posts, userEmail: req.session.userEmail });
-  } catch (err) {
-    console.log(err);
-    res.send('Server error');
+function checkAuth(req, res, next) {
+  if (!req.session.userEmail) {
+    return res.status(401).send('Not authenticated');
   }
-});
+
+  next();
+}
+
 
 
 // NEW ARTICLE ROUTES 
@@ -59,7 +32,7 @@ router.post('/create', checkAuth, async (req, res) => {
   })
   try {
     post = await post.save()
-    res.redirect(`/post/${post.id}`)
+    res.redirect(`/post`)
     return
   } catch (e) {
     console.log(e)
@@ -68,19 +41,19 @@ router.post('/create', checkAuth, async (req, res) => {
   }
 })
 
-// route is for displaying user posts after login
+// gets specific users posts
 router.get('/', checkAuth, async (req, res) => {
-
   try {
-    const posts = await Post.find({ userEmail: req.session.userEmail })
-    res.render('post', { userEmail: req.session.userEmail });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).send('Server error');
+    const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
+    // console.log(posts)
+    res.render('post', { posts, userEmail: req.session.userEmail });
+  } catch (err) {
+    console.log(err);
+    res.send('Server error');
   }
 });
 
-
+// EDIT post
 router.get('/edit/:id', checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -94,6 +67,8 @@ router.get('/edit/:id', checkAuth, async (req, res) => {
     return res.redirect('/post');
   }
 });
+
+
 // Update post route
 router.post('/:id', checkAuth, async (req, res) => {
   try {
@@ -106,15 +81,13 @@ router.post('/:id', checkAuth, async (req, res) => {
     post.description = req.body.description;
     await post.save();
 
-    res.redirect(`/post/${post.id}`);
+    res.redirect(`/post`);
   } catch (e) {
     console.log("An error occurred");
     console.error(e);
     return res.redirect('/post');
   }
 });
-
-
 
 //Delete route
 router.delete('/:id', async (req, res) => {

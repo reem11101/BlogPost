@@ -20,13 +20,12 @@
             <label for="description mb-2">Description</label>
             <textarea name="description" id="description" class="form-control mb-2">{{ post.description }}</textarea>
     </div>
-    </form>
     <button type="submit" class="btn btn-success mb-2">Update Post</button>
-
     <form action="/post/{{post.id}}?_method=DELETE" method="POST" class="d-inline">
         <button type="submit" class="btn btn-danger">Delete</button>
-    </form>
+    </form> <a href='post'>back</a>
     </div>
+    </form>
 </body>
 
 

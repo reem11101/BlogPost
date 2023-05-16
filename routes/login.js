@@ -21,7 +21,7 @@ router.get('/', function (req, res, next) {
     }
     req.session.userEmail = user.email;
   
-    res.render('post');
+    res.render('post', { userEmail: req.session.userEmail });
   });
   
 // Handle register request

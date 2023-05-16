@@ -18,7 +18,7 @@
     <div class="container">
         <h1 class="mb-4">New Post</h1>
         <form action="/post/create" method="POST">
-     <div> Created by:{{this.userEmail}}</div>
+            <div> Created by:{{this.userEmail}}</div>
             <div class="form-group">
                 <label for="title mb-2">Title</label>
                 <input required type="text" name="title" class="form-control" value="{{ post.title }}">
@@ -38,18 +38,22 @@
 
 
 
-<!-- ... -->
-  {{#each posts}}
-    <div class="post">
-        <h2>{{ this.title }}</h2>
-        <p>{{ this.description }}</p>
-        <a href="/post/edit/{{this._id}} " class="btn btn-secondary">Edit</a>
-    </div>
-    {{/each}}
+    <!-- ... -->
+    <div class="contianer">
+        {{#each posts}}
+        <div class="card mt-4">
+            <h2 class="card-title">{{ this.title }}</h2>
+            <p>{{ this.description }}</p>
+        </div>
+        <a href="/post/edit/{{this._id}}" class="btn btn-secondary">Edit</a>
+<form action="/post/{{this._id}}?_method=DELETE" method="POST" class="d-inline">
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>
 
-    <div class="container">
-       
-        <a href="/" class="btn btn-secondary">Back</a>
+        {{/each}}
+    </div>
+    <div class="container mb-2">
+        <a href="/views/post" class="btn btn-secondary mb-2">Back</a>
     </div>
 
 
