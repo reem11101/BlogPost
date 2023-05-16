@@ -24,16 +24,15 @@ router.get('/', checkAuth, async (req, res) => {
   }
 });
 
-//functions for all posts
+//FUNCTOIN FOR AUTHENTICATION ALL POSTS
 function checkAuth(req, res, next) {
   if (!req.session.userEmail) {
     return res.status(401).send('Not authenticated');
   }
-
   next();
 }
 
-// EDIT post
+// GET EDIT POST ROUTE 
 router.get('/edit/:id', checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -49,13 +48,12 @@ router.get('/edit/:id', checkAuth, async (req, res) => {
 });
 
 
-// NEW ARTICLE ROUTES 
-// router.post('/create', async (req, res) => {
+// NEW ARTICLE ROUTE
 router.post('/create', checkAuth, async (req, res) => {
   let post = new Post({
     title: req.body.title,
     description: req.body.description,
-    userEmail: req.session.userEmail   // set the user field
+    userEmail: req.session.userEmail   // SETS THE USEREMAIL AS SESSION USER
   })
   try {
     post = await post.save()
@@ -68,21 +66,8 @@ router.post('/create', checkAuth, async (req, res) => {
   }
 })
 
-// // gets specific users posts
-// router.get('/', checkAuth, async (req, res) => {
-//   try {
-//     const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
-//     // console.log(posts)
-//     res.render('post', { posts, userEmail: req.session.userEmail });
-//   } catch (err) {
-//     console.log(err);
-//     res.send('Server error');
-//   }
-// });
 
-
-
-// Update post route
+// UPDATE THE POST ROUTE AFTER EDITING
 router.post('/:id', checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -102,7 +87,7 @@ router.post('/:id', checkAuth, async (req, res) => {
   }
 });
 
-//Delete route
+//DELETE POST ROUTE
 router.delete('/:id', async (req, res) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
@@ -132,5 +117,6 @@ router.get('/:id', async (req, res) => {
     return res.redirect('/')
   }
 });
-//export Router
+
+//EXPORT OF ROUTES
 module.exports = router;

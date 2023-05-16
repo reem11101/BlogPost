@@ -11,31 +11,22 @@ var app = express();
 app.use(methodOverride('_method'))
 
 
-// //functions for all posts
-// function checkAuth(req, res, next) {
-//   if (!req.session.userEmail) {
-//     return res.status(401).send('Not authenticated');
-//   }
-
-//   next();
-// }
-
-// fetch all posts
+// GET ALL FETCH FUNCTION TO DISPLAY ALL USERS POSTS 
 async function getAllPosts() {
   const posts = await Post.find().sort({
-    createdAt: 'desc'//sorts the posts in decending order 
+    createdAt: 'desc' //SORTS POSTS INTO DECENDING ORDER SO THE LATESTS ARE AT THE TOP
   });
   return posts;
 }
 
-///Get request function for the getAllPosts function
+///GET ROUTE FOR INDEX PAGE FOR THE getAllPosts function
 router.get('/', async function (req, res, next) {
   const posts = await getAllPosts();
   res.render('index', { post: posts });
 });
 
 
-// Search posts
+// SEARCH ROUTE FOR THE SEARCH FUNCTION ON INDEX PAGE
 router.get('/search', async function (req, res, next) {
   let query = new RegExp(req.query.title, 'i'); // case insensitive
   const posts = await Post.find({ title: query }).sort({ createdAt: 'desc' });
@@ -46,12 +37,9 @@ router.get('/search', async function (req, res, next) {
   res.render('index', { post: posts });
 });
 
-
-/* GET home page. */
-router.get('/', function(req, res, next) {
- 
-  res.render('index', );
+// INDEX GET ROUTE
+router.get('/', function (req, res, next) {
+  res.render('index',);
 });
 
-//mongo password amb75nd62rkAXoYF
 module.exports = router;

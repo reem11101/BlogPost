@@ -10,28 +10,26 @@ const methodOverride = require('method-override')
 const session = require('express-session');
 
 
-
 const uri = 'mongodb+srv://mongo:mongo@cluster0.zcdoti8.mongodb.net/?retryWrites=true&w=majority';
-//mongoose.connect('mongodb://localhost/blog', {useNewUrlParser: true});
+
 mongoose
-  .connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
 
 
-var indexRouter = require('./routes/index');    
-var usersRouter = require('./routes/users');
+var indexRouter = require('./routes/index');
 var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
 
-// Register the formatDate helper
-Handlebars.registerHelper('formatDate', function(date) {
+// REGISTER THE FORMATDATE HELPER
+Handlebars.registerHelper('formatDate', function (date) {
   return moment(date).format('MMMM Do, YYYY');
 });
 
 var app = express();
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
   res.locals.session = req.session;
   next();
 });
@@ -41,7 +39,7 @@ app.use(function(req, res, next){
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-app.use(express.urlencoded({extended: false}))
+app.use(express.urlencoded({ extended: false }))
 app.use(methodOverride('_method'))
 
 app.use(logger('dev'));
@@ -52,33 +50,29 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //authentication
 app.use(session({
-  secret: 'blog post',  // replace with a secret string
+  secret: 'blog post',  
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: 'auto' }  // set to 'auto' for secure cookies in HTTPS, regular cookies in HTTP
+  cookie: { secure: 'auto' }  
 }));
 
-app.use(session({/* session configuration options */}));
+app.use(session({}));
 app.use(methodOverride('_method'));
 app.use(express.urlencoded({ extended: true }));
 
 
 // using the routes created
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/post', postRouter);
-// app.use('/newPost', newPostRouter)
 
-
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
+//CATCH 404 FOR ERROR
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

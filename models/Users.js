@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const bcrypt= require('bcrypt')
+const bcrypt = require('bcrypt')
 
-
+//USER SCHEMA FOR USER LOGIN
 const UserSchema = new mongoose.Schema(
   {
     username: {
@@ -18,7 +18,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     }
-});
+  });
 
 
 // Bcrypt not working revisit later:
