@@ -10,6 +10,16 @@ const methodOverride = require('method-override')
 var app = express();
 app.use(methodOverride('_method'))
 
+
+// //functions for all posts
+// function checkAuth(req, res, next) {
+//   if (!req.session.userEmail) {
+//     return res.status(401).send('Not authenticated');
+//   }
+
+//   next();
+// }
+
 // fetch all posts
 async function getAllPosts() {
   const posts = await Post.find().sort({
@@ -24,6 +34,7 @@ router.get('/', async function (req, res, next) {
   res.render('index', { post: posts });
 });
 
+
 // Search posts
 router.get('/search', async function (req, res, next) {
   let query = new RegExp(req.query.title, 'i'); // case insensitive
@@ -32,8 +43,7 @@ router.get('/search', async function (req, res, next) {
   if (!posts.length) {
     return res.render('', { message: "No posts found with the given title.", post: [] });
   }
-
-  res.render('', { post: posts });
+  res.render('index', { post: posts });
 });
 
 

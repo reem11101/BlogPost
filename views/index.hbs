@@ -44,11 +44,10 @@
         <div class="card mt-4">
             <div class="card-body">
                 <h4 class="card-title"> {{ this.title }}</h4>
+                 <div class="card-subtitle text-muted mb-2">Created by:{{this.userEmail}}</div>
                 <div class="card-subtitle text-muted mb-2"> {{this.createdAt}}</div>
                 <div class="card-text mb-2"> {{ this.description }}</div>
-                <a href="/post/{{this.id}}" class="btn btn-primary">Read More</a>
                 <form action="/post/{{this.id}}?_method=DELETE" method="POST" class="d-inline">
-                    {{!-- <button type="submit" class="btn btn-danger">Delete</button> --}}
                 </form>
             </div>
         </div>

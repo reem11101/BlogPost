@@ -3,49 +3,59 @@ var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose')
 var Post = require('../models/Post')
-const Handlebars = require('handlebars');
-const moment = require('moment');
+var Users = require('../models/Users')
 const methodOverride = require('method-override')
+const session = require('express-session');
 
-// Handlebars.registerHelper('formatDate', function(date) {
-//   return moment(date).format('MMMM Do, YYYY');
-// });
+
+
 
 var app = express();
 app.use(methodOverride('_method'))
 
-// fetch all posts
-async function getAllPosts() {
-  const posts = await Post.find().sort({
-    createdAt: 'desc'//sorts the posts in decending order 
-  });
-  return posts;
-}
+//functions for all posts
+        function checkAuth(req, res, next) {
+          if (!req.session.userEmail) {
+            return res.status(401).send('Not authenticated');
+          }
 
+          next();
+        }
+        // fetch all posts
+        async function getAllPosts() {
+          const posts = await Post.find().sort({
+            createdAt: 'desc'//sorts the posts in decending order 
+          });
+          return posts;
+        }
+        
 ///Get request function for the getAllPosts function
 router.get('/', async function (req, res, next) {
   const posts = await getAllPosts();
-  res.render('post', { post: posts });
+  res.render('index', { post: posts });
 });
 
-// Search posts
-router.get('/search', async function (req, res, next) {
-  let query = new RegExp(req.query.title, 'i'); // case insensitive
-  const posts = await Post.find({ title: query }).sort({ createdAt: 'desc' });
 
-  if (!posts.length) {
-    return res.render('post', { message: "No posts found with the given title.", post: [] });
+
+router.get('/', checkAuth, async (req, res) => {
+  try {
+    const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
+    console.log(posts);
+    res.render('post', { posts, userEmail: req.session.userEmail });
+  } catch (err) {
+    console.log(err);
+    res.send('Server error');
   }
-
-  res.render('post', { post: posts });
 });
 
 
 // NEW ARTICLE ROUTES 
-router.post('/create', async (req, res) => {
+// router.post('/create', async (req, res) => {
+router.post('/create', checkAuth, async (req, res) => {
   let post = new Post({
     title: req.body.title,
-    description: req.body.description
+    description: req.body.description,
+    userEmail: req.session.userEmail   // set the user field
   })
   try {
     post = await post.save()
@@ -53,18 +63,29 @@ router.post('/create', async (req, res) => {
     return
   } catch (e) {
     console.log(e)
-    res.render('post', { post: [] })
+    res.render('/', { post: [] })
     return
   }
 })
 
-// Edit post route
-router.get('/edit/:id', async (req, res) => {
+// route is for displaying user posts after login
+router.get('/', checkAuth, async (req, res) => {
+
+  try {
+    const posts = await Post.find({ userEmail: req.session.userEmail })
+    res.render('post', { userEmail: req.session.userEmail });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send('Server error');
+  }
+});
+
+
+router.get('/edit/:id', checkAuth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (!post) {
-      console.log("Post not found");
-      return res.redirect('/post');
+    if (!post || post.userEmail !== req.session.userEmail) {
+      return res.status(403).send('Not authorized try different account');
     }
     res.render('edit', { post });
   } catch (e) {
@@ -73,15 +94,18 @@ router.get('/edit/:id', async (req, res) => {
     return res.redirect('/post');
   }
 });
-
 // Update post route
-router.post('/:id', async (req, res) => {
+router.post('/:id', checkAuth, async (req, res) => {
   try {
-    const post = await Post.findByIdAndUpdate(req.params.id, req.body);
-    if (!post) {
-      console.log("Post not found");
-      return res.redirect('/post');
+    const post = await Post.findById(req.params.id);
+    if (!post || post.userEmail !== req.session.userEmail) {
+      return res.render('login');
     }
+
+    post.title = req.body.title;
+    post.description = req.body.description;
+    await post.save();
+
     res.redirect(`/post/${post.id}`);
   } catch (e) {
     console.log("An error occurred");
@@ -90,6 +114,22 @@ router.post('/:id', async (req, res) => {
   }
 });
 
+
+
+//Delete route
+router.delete('/:id', async (req, res) => {
+  try {
+    const post = await Post.findByIdAndDelete(req.params.id);
+    if (!post || post.userEmail !== req.session.userEmail) {
+      return res.status(403).send('Not authorized');
+    }
+    res.redirect('/post');
+  } catch (e) {
+    console.log("An error occurred");
+    console.error(e);
+    return res.redirect('/post');
+  }
+});
 
 // ID WILDCARD ROUTES
 router.get('/:id', async (req, res) => {
@@ -106,23 +146,5 @@ router.get('/:id', async (req, res) => {
     return res.redirect('/')
   }
 });
-
-//Delete route
-router.delete('/:id', async (req, res) => {
-  try {
-    const post = await Post.findByIdAndDelete(req.params.id);
-    if (!post) {
-      console.log("Post not found");
-      return res.redirect('/post');
-    }
-    res.redirect('/post');
-  } catch (e) {
-    console.log("An error occurred");
-    console.error(e);
-    return res.redirect('/post');
-  }
-});
-
-
 //export Router
 module.exports = router;

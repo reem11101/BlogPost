@@ -23,7 +23,6 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var postRouter = require('./routes/post');
-// var newPostRouter = require('./routes/newPost');
 
 // Register the formatDate helper
 Handlebars.registerHelper('formatDate', function(date) {
@@ -32,6 +31,10 @@ Handlebars.registerHelper('formatDate', function(date) {
 
 var app = express();
 
+app.use(function(req, res, next){
+  res.locals.session = req.session;
+  next();
+});
 
 
 // view engine setup for handlebars
@@ -49,11 +52,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //authentication
 app.use(session({
-  secret: 'your secret here',  // replace with a secret string
+  secret: 'blog post',  // replace with a secret string
   resave: false,
   saveUninitialized: true,
   cookie: { secure: 'auto' }  // set to 'auto' for secure cookies in HTTPS, regular cookies in HTTP
 }));
+
+app.use(session({/* session configuration options */}));
+app.use(methodOverride('_method'));
+app.use(express.urlencoded({ extended: true }));
+
 
 // using the routes created
 app.use('/', indexRouter);

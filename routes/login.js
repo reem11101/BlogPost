@@ -1,31 +1,29 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/Users');
+var Post = require('../models/Post');
 var bcrypt = require('bcrypt');
+
 
 // Render login page
 router.get('/', function (req, res, next) {
   res.render('login');
 });
 
-// Render register page
-router.get('/register', function (req, res, next) {
-  res.render('register');
-});
 
 // Handle login request
-router.post('/', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-
-  if (!user || user.password !== password) {
-    return res.render('post');
-  }
-
-  res.send('Logged in');
-});
-
-
+  router.post('/', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+  
+    if (!user || user.password !== password) {
+      return res.status(400).send('Invalid email or password');
+    }
+    req.session.userEmail = user.email;
+  
+    res.render('post');
+  });
+  
 // Handle register request
 router.post('/register', async (req, res) => {
   const { username, email, password } = req.body;
@@ -38,7 +36,7 @@ router.post('/register', async (req, res) => {
 
     user = new User({ username, email, password });
     await user.save();
-    res.send('User registered');
+    res.render('/');
   } catch (error) {
     console.log(error);
     res.status(500).send('Server error');
