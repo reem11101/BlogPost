@@ -17,6 +17,7 @@ router.get('/', function (req, res, next) {
     const user = await User.findOne({ email });
   
     if (!user || user.password !== password) {
+      return res.render('login', { message: "Invalid email or password" });
       return res.status(400).send('Invalid email or password');
     }
     req.session.userEmail = user.email;
@@ -31,12 +32,13 @@ router.post('/register', async (req, res) => {
   try {
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).send('User already registered');
+      return res.render('login', { message: "User already registered" });
+      // return res.status(400).send('User already registered');
     }
 
     user = new User({ username, email, password });
     await user.save();
-    res.render('/');
+    res.render('login',{ userEmail: req.session.userEmail });
   } catch (error) {
     console.log(error);
     res.status(500).send('Server error');

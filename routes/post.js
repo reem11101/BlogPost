@@ -11,6 +11,19 @@ const session = require('express-session');
 var app = express();
 app.use(methodOverride('_method'))
 
+
+// gets specific users posts
+router.get('/', checkAuth, async (req, res) => {
+  try {
+    const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
+    // console.log(posts)
+    res.render('post', { posts, userEmail: req.session.userEmail });
+  } catch (err) {
+    console.log(err);
+    res.send('Server error');
+  }
+});
+
 //functions for all posts
 function checkAuth(req, res, next) {
   if (!req.session.userEmail) {
@@ -20,6 +33,20 @@ function checkAuth(req, res, next) {
   next();
 }
 
+// EDIT post
+router.get('/edit/:id', checkAuth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post || post.userEmail !== req.session.userEmail) {
+      return res.status(403).send('Not authorized try different account');
+    }
+    res.render('edit', { post });
+  } catch (e) {
+    console.log("An error occurred");
+    console.error(e);
+    return res.redirect('/post');
+  }
+});
 
 
 // NEW ARTICLE ROUTES 
@@ -41,32 +68,18 @@ router.post('/create', checkAuth, async (req, res) => {
   }
 })
 
-// gets specific users posts
-router.get('/', checkAuth, async (req, res) => {
-  try {
-    const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
-    // console.log(posts)
-    res.render('post', { posts, userEmail: req.session.userEmail });
-  } catch (err) {
-    console.log(err);
-    res.send('Server error');
-  }
-});
+// // gets specific users posts
+// router.get('/', checkAuth, async (req, res) => {
+//   try {
+//     const posts = await Post.find({ userEmail: req.session.userEmail }).lean();
+//     // console.log(posts)
+//     res.render('post', { posts, userEmail: req.session.userEmail });
+//   } catch (err) {
+//     console.log(err);
+//     res.send('Server error');
+//   }
+// });
 
-// EDIT post
-router.get('/edit/:id', checkAuth, async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post || post.userEmail !== req.session.userEmail) {
-      return res.status(403).send('Not authorized try different account');
-    }
-    res.render('edit', { post });
-  } catch (e) {
-    console.log("An error occurred");
-    console.error(e);
-    return res.redirect('/post');
-  }
-});
 
 
 // Update post route

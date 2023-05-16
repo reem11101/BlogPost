@@ -46,9 +46,9 @@
             <p>{{ this.description }}</p>
         </div>
         <a href="/post/edit/{{this._id}}" class="btn btn-secondary">Edit</a>
-<form action="/post/{{this._id}}?_method=DELETE" method="POST" class="d-inline">
-  <button type="submit" class="btn btn-danger">Delete</button>
-</form>
+        <form action="/post/{{this._id}}?_method=DELETE" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
 
         {{/each}}
     </div>

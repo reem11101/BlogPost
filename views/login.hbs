@@ -27,7 +27,7 @@
     </form>
   </div>
 
-<div class="constainer">
+  <div class="constainer">
     <h1>Register</h1>
     <form action="/login/register" method="POST">
       <div>
@@ -44,6 +44,9 @@
       </div>
       <button type="submit" class="btn btn-primary">Register</button>
     </form>
+      {{#if message}}
+      <div class="alert alert-danger mt-4">{{message}}</div>
+      {{/if}}
     <a href="/" class="btn btn-secondary">Home</a>
 
   </div>
