@@ -20,7 +20,8 @@ const UserSchema = new mongoose.Schema(
 });
 
 
-// Bcrypt not working
+// Bcrypt not working revisit later:
+
 // UserSchema.pre('save', async function (next) {
 //   try {
 //     if (!this.isModified('password')) {

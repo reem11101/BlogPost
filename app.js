@@ -7,7 +7,7 @@ var logger = require('morgan');
 const Handlebars = require('handlebars');
 const moment = require('moment');
 const methodOverride = require('method-override')
-
+const session = require('express-session');
 
 
 
@@ -17,10 +17,7 @@ mongoose
   .connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.log(err));
-// mongoose
-//   .connect(uri, {useNewUrlParser: true, useUnifiedTopology: true})
-//   .then(console.log("Connected to MongoDB"))
-//   .catch((err) => console.log(err));
+
 
 var indexRouter = require('./routes/index');    
 var usersRouter = require('./routes/users');
@@ -33,9 +30,9 @@ Handlebars.registerHelper('formatDate', function(date) {
   return moment(date).format('MMMM Do, YYYY');
 });
 
-
-
 var app = express();
+
+
 
 // view engine setup for handlebars
 app.set('views', path.join(__dirname, 'views'));
@@ -49,6 +46,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//authentication
+app.use(session({
+  secret: 'your secret here',  // replace with a secret string
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: 'auto' }  // set to 'auto' for secure cookies in HTTPS, regular cookies in HTTP
+}));
 
 // using the routes created
 app.use('/', indexRouter);

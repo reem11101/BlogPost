@@ -37,8 +37,6 @@ router.get('/search', async function (req, res, next) {
     return res.render('post', { message: "No posts found with the given title.", post: [] });
   }
 
-
-
   res.render('post', { post: posts });
 });
 
@@ -110,7 +108,6 @@ router.get('/:id', async (req, res) => {
 });
 
 //Delete route
-
 router.delete('/:id', async (req, res) => {
   try {
     const post = await Post.findByIdAndDelete(req.params.id);
@@ -125,18 +122,6 @@ router.delete('/:id', async (req, res) => {
     return res.redirect('/post');
   }
 });
-
-// router.delete('/:id', async (req, res) => {
-//   try {
-//     await Post.findById(req.params.id);
-//     await this.post.delete();
-//     res.redirect('post');
-//   } catch (e) {
-//     console.log("An error occurred");
-//     console.error(e);
-//     return res.redirect('post');
-//   }
-// });
 
 
 //export Router
